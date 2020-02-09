@@ -8,9 +8,9 @@ from Version_1.logger import logger
 from Version_1.CDU import CDU
 from PyQt5.QtWidgets import *
 
-logger.info('Starting 737NG CDU')
+logger.info('启动 FYCYC-737NG-CDU程序')
 
-logger.info('Start Detecting Register Check')
+logger.info('检测用户注册状态')
 
 if __name__ == '__main__':
     app = QApplication([])

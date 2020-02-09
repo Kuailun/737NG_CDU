@@ -30,7 +30,7 @@ class Configuration:
 
         # Read in latest file
         self._Configuration_Read_Config_File()
-        logger.info('Config.ini loaded successfully')
+        logger.info('Config.ini 加载成功')
 
         pass
 
@@ -67,7 +67,7 @@ class Configuration:
 
         # In case the file is not existed
         if not os.path.exists(self.file_path):
-            logger.info('Config.ini is not existed, create a new one')
+            logger.info('Config.ini 不存在, 创建一个新文件')
             self._Configuration_Write_Config_File()
             pass
 
@@ -92,12 +92,14 @@ class Configuration:
 
     def Configuration_Interface_Set_Config(self, config):
         '''
-        Set config file to self._config
+        将配置文件设置到self._config
         :param config:
         :return:
         '''
 
         self._config = config
+
+        #
         self._Configuration_Write_Config_File()
         pass
 
