@@ -4,8 +4,14 @@
 # @Date       : 2020/1/31 12:54
 # @Description:
 
-from Version_1.DataFiles.database import database
-from Version_1.logger import logger
+import settings as ss
+
+if ss.APPLICATION_MODE == "DEVELOPMENT":
+    from Version_1.Database import database
+    from Version_1.logger import logger
+else:
+    from database import database
+    from logger import logger
 
 class NavRTE(database):
     '''
@@ -63,13 +69,13 @@ class NavRTE(database):
         logger.info(r'Navigation RTE database version: {0}'.format(AIRAC_CYCLE))
 
         # Get data from the file
-        data = data[16:-1]
+        data = data[16:]
 
         split_data = []
         route_data = {}
         fix_data = {}
         # Split route, fix
-        for i in range(len(data)):
+        for i in range(len(data)-1):
             item = data[i]
             item = item.replace('\n','').split(' ')
             split_data.append(item)

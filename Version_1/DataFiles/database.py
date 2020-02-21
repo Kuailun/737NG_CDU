@@ -4,8 +4,13 @@
 # @Date       : 2019/12/26 18:30
 # @Description:
 
-from Version_1.logger import logger
 import os
+import settings as ss
+
+if ss.APPLICATION_MODE == "DEVELOPMENT":
+    from Version_1.logger import logger
+else:
+    from logger import logger
 
 class database:
     '''
@@ -20,6 +25,7 @@ class database:
         :param p_type: 数据库类型（Mongodb, txt, excel等）
         '''
 
+        self._path = p_path
         self._name = p_name
         self._type = p_type
         self._database_path = p_path + p_name + "." + p_type

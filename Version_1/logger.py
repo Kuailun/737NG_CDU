@@ -8,7 +8,7 @@ import logging
 import os
 import time
 import coloredlogs
-from Version_1.settings import LOGGING_CONSOLE_FLAG,LOGGING_FILE_LOG,LOGGING_CURRENT_LEVEL
+from settings import LOGGING_CONSOLE_FLAG,LOGGING_FILE_LOG,LOGGING_CURRENT_LEVEL
 
 # -----------------------------------------------------------------------------
 # 创建或获取 Logger 实例

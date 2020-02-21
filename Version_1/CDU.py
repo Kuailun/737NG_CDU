@@ -6,14 +6,101 @@
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt,QRectF
-from Version_1.logger import logger
-from Version_1 import settings as ss
-from Version_1.config import Configuration
-from Version_1.dataFile import DataFile
-from Version_1.logic import pageLogic
-from Version_1.logic import drawLogic
+from PyQt5.QtCore import Qt,QThread,pyqtSignal
+import time
+import settings as ss
 
+if ss.APPLICATION_MODE == "DEVELOPMENT":
+    from Version_1.logger import logger
+    from Version_1.config import Configuration
+    from Version_1.dataFile import DataFile
+    from Version_1.logic import pageLogic
+    from Version_1.logic import drawLogic
+    from Version_1 import Utils as ut
+    from Version_1 import variable
+else:
+    from logger import logger
+    from config import Configuration
+    from dataFile import DataFile
+    import pageLogic
+    import drawLogic
+    import Utils as ut
+    import variable
+
+class GridData(QTableWidget):
+    def __init__(self):
+        QTableWidget.__init__(self)
+        self.setWindowTitle("内部开发数据看板")
+        self.resize(800,800)
+        self.setColumnCount(2)
+
+        self.setColumnWidth(0,300)
+        self.setColumnWidth(1,450)
+
+
+        column_name = ['序号','名称','值']
+        self.setHorizontalHeaderLabels(column_name)
+        pass
+
+    def update_item_data(self, data):
+        """更新内容"""
+        self.setRowCount(len(data))
+        index = 0
+        keys = sorted(data.keys())
+        for key in keys:
+            if type(data[key]) == int or type(data[key]) == str or type(data[key]) == list or type(data[key]) == dict:
+                self.setItem(index, 0, QTableWidgetItem(key))
+                self.setItem(index, 1, QTableWidgetItem(str(data[key])))
+                index = index + 1
+            elif not data[key]:
+                self.setItem(index, 0, QTableWidgetItem(key))
+                self.setItem(index, 1, QTableWidgetItem(""))
+                index = index + 1
+        pass
+    pass
+
+class UpdateData(QThread):
+    """更新数据类"""
+    update_date = pyqtSignal(object)  # pyqt5 支持python3的str，没有Qstring
+
+    CDU = None
+
+    def setCDU(self,cdu):
+        """
+        设置CDU数据
+        :param cdu:
+        :return:
+        """
+        self.CDU = cdu
+
+    def run(self):
+        while True:
+            transmitData = self.assembleData()
+            self.update_date.emit(transmitData)  # 发射信号
+            time.sleep(0.5)
+            pass
+        pass
+
+    def assembleData(self):
+        """
+        准备发送的数据
+        :return:
+        """
+        if self.CDU == None:
+            return False,None
+
+        transmitData = self.CDU.dataFile.Interface_DATA_COPY()
+        cduData = {
+            ss.variable.CDU_WINDOW_TITLE : self.CDU.title,
+            ss.variable.CDU_WINDOW_WIDTH : self.CDU.window_width,
+            ss.variable.CDU_WINDOW_HEIGHT: self.CDU.window_height,
+            ss.variable.CDU_WINDOW_X : self.CDU.window_x,
+            ss.variable.CDU_WINDOW_Y : self.CDU.window_y,
+            ss.variable.CDU_CURRENT_PAGE : self.CDU.currentPage,
+            ss.variable.CDU_CURRENT_PAGE_INDEX : self.CDU.currentPageIndex
+        }
+        transmitData.update(cduData)
+        return transmitData
 
 class CDU(QWidget):
     def __init__(self, *args, **kwargs):
@@ -34,8 +121,6 @@ class CDU(QWidget):
         # Datafile
         self.dataFile = DataFile()
 
-
-
         logger.info('启动FYCYC-CDU')
 
         self.title = ss.CDU_WINDOW_TITLE
@@ -46,13 +131,25 @@ class CDU(QWidget):
         self.window_y = int(self.config['App']['Position_Y'])
         self.window_background_pxmap = QPixmap(self.imagePath)
 
-        self.currentPage = ss.pageIndex.INDEX
+        self.currentPage = variable.page_index.INDEX
         self.currentPageIndex = 1
         self.key = ""
-        self.inputLine = ["","","",""]
-        self.delFlag = False
+        self.inputLine = ["","",""]
+        self.msgFlag = False # True代表消息被清除了，但是不是CLR方式清除的，还需要再CLR一下
+        # 0-INPUT, 1-DELETE, 2-MSG
+        self.inputDisplayMode = variable.input_line_display_mode.SELFINPUT
         self.lineDisplay = self.ResetLineDisplay()
 
+        # 启动更新线程
+        self.gridData = GridData()
+        self.update_data_thread = UpdateData()
+        self.update_data_thread.setCDU(self)
+        self.update_data_thread.update_date.connect(self.gridData.update_item_data)
+        self.update_data_thread.start()
+
+        # 右键菜单
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.rightMenuShow)
         # Initialize the UI
         self.initUI()
 
@@ -69,6 +166,30 @@ class CDU(QWidget):
         self.setFixedSize(self.window_width,self.window_height)
         self.move(self.window_x,self.window_y)
         pass
+
+    def rightMenuShow(self):
+        """
+        右键菜单
+        :return:
+        """
+        try:
+            self.contextMenu = QMenu()
+            if ss.APPLICATION_MODE == "DEVELOP":
+                self.menuData = self.contextMenu.addAction(u'DataTable')
+                self.menuData.triggered.connect(self.actionMenuData)
+                self.contextMenu.popup(QCursor.pos())
+                self.contextMenu.show()
+        except Exception as e:
+            logger.warning(e)
+            pass
+        pass
+
+    def actionMenuData(self):
+        """
+        数据查看器的页面
+        :return:
+        """
+        self.gridData.show()
 
     def update(self):
         '''
@@ -90,7 +211,10 @@ class CDU(QWidget):
         # Draw the background image
         painter.drawPixmap(0,0,self.window_width,self.window_height,self.window_background_pxmap)
 
-        pageLogic.pageLocig(self)
+        # 得到当前的显示模式
+        self.updateInputLine()
+
+        pageLogic.pageLogic(self)
         drawLogic.pageDraw(self,painter)
         self.key = ""
 
@@ -137,13 +261,25 @@ class CDU(QWidget):
         # Leftbutton event
         if event.buttons() == Qt.LeftButton:
             for button in ss.CDU_KEY_LIST:
-                button = ss.CDU_KEY_LIST[button]
-                if ((mousePosition.x() >= button[0]) and (mousePosition.x() <= button[0] + button[2]) and (mousePosition.y() >= button[1]) and (mousePosition.y() <= button[1] + button[3])):
-                    self.key = button[4]
+                buttonItem = ss.CDU_KEY_LIST[button]
+                if ((mousePosition.x() >= buttonItem[0]) and (mousePosition.x() <= buttonItem[0] + buttonItem[2]) and (mousePosition.y() >= buttonItem[1]) and (mousePosition.y() <= buttonItem[1] + buttonItem[3])):
+                    self.key = button
                     pass
 
         self.repaint()
         pass
+
+    def closeEvent(self,event):
+        """
+        关闭窗口时的动作
+        :param event:
+        :return:
+        """
+        try:
+            self.menudata.close()
+            self.menudata = None
+        except:
+            pass
 
     def ResetLineDisplay(self):
         """
@@ -157,6 +293,76 @@ class CDU(QWidget):
         }
         return lineDisplay
 
+    def insertMsg(self, msg):
+        """
+        插入一条msg
+        :param msg:
+        :return:
+        """
+        # 插入需要显示的消息
+        if len(self.inputLine) >= 3:
+            # 逻辑需要
+            self.inputLine.append(msg)
+            self.msgFlag = True
+        pass
+
+    def removeMsg(self):
+        """
+        移除一条msg
+        :return:
+        """
+        if len(self.inputLine) == 3:
+            # 什么都不做
+            pass
+        elif len(self.inputLine) >= 4:
+            self.inputLine.pop()
+            pass
+        else:
+            # 不应该出现该情况
+            logger.warning(r"msg系统错误: 删除 {0}".format(self.inputLine[-1]))
+            pass
+        pass
+
+    def resetInput(self):
+        """
+        清空输入行
+        :return:
+        """
+        self.inputLine[1] = ""
+        self.updateInputLine()
+        pass
+
+    def updateInputLine(self):
+        """
+        更新输入区的显示
+        :return:
+        """
+        # 如果一行的字母过多，则仅保留前24个
+        if len(self.inputLine[1]) > 24:
+            self.inputLine[1] = self.inputLine[1][0:24]
+            pass
+
+        # 如果没有msg，也没有delete，则显示输入行
+        if len(self.inputLine) == 3 and self.inputLine[2] == "":
+            self.inputLine[0] = self.inputLine[1]
+        elif len(self.inputLine) == 3 and self.inputLine[2] == "DELETE":
+            self.inputLine[0] = self.inputLine[2]
+        elif len(self.inputLine) >= 4:
+            self.inputLine[0] = self.inputLine[-1]
+            pass
+
+        """当前的显示模式 0-输入，1-DELETE，2-MSG"""
+        # 显示自己输入的内容
+        if self.inputLine[0] == self.inputLine[1]:
+            self.inputDisplayMode = variable.input_line_display_mode.SELFINPUT
+        # 显示删除
+        elif self.inputLine[0] == "DELETE" and self.inputLine[2] == "DELETE":
+            self.inputDisplayMode = variable.input_line_display_mode.DELETE
+        # 显示消息
+        elif len(self.inputLine) > 3 and self.inputLine[0] == self.inputLine[-1]:
+            self.inputDisplayMode = variable.input_line_display_mode.MESSAGE
+            pass
+        pass
 
 
     def UpdateConfig(self):
@@ -165,8 +371,6 @@ class CDU(QWidget):
         :return:
         '''
 
-        # self.config['App']['Window_Width'] = str(self.window_width)
-        # self.config['App']['Window_Height'] = str(self.window_height)
         self.config['App']['Position_X'] = str(self.window_x)
         self.config['App']['Position_Y'] = str(self.window_y)
 

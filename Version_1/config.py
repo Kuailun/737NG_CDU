@@ -4,10 +4,15 @@
 # @Date       : 2019/12/26 18:30
 # @Description:
 
-from Version_1 import settings as ss
 import os
 import configparser
-from Version_1.logger import logger
+
+import settings as ss
+
+if ss.APPLICATION_MODE == "DEVELOPMENT":
+    from Version_1.logger import logger
+else:
+    from logger import logger
 
 class Configuration:
     def __init__(self):

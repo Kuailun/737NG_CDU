@@ -4,9 +4,16 @@
 # @Date       : 2019/12/26 18:20
 # @Description: Start File
 
-from Version_1.logger import logger
-from Version_1.CDU import CDU
 from PyQt5.QtWidgets import *
+import sys
+import settings as ss
+
+if ss.APPLICATION_MODE == "DEVELOPMENT":
+    from Version_1.logger import logger
+    from Version_1.CDU import CDU
+else:
+    from logger import logger
+    from CDU import CDU
 
 logger.info('启动 FYCYC-737NG-CDU程序')
 
@@ -18,4 +25,4 @@ if __name__ == '__main__':
 
     cdu = CDU()
     cdu.show()
-    app.exec_()
+    sys.exit(app.exec_())

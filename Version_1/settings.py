@@ -5,14 +5,22 @@
 # @Description: Gerneral Settings
 
 import os
+import sys
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QRectF
+import variable
 
 # -----------------------------------------------------------------------------
 # Settings for application
 # -----------------------------------------------------------------------------
 APPLICATION_PATH = os.path.dirname(os.path.realpath(__file__))
-APPLICATION_IMAGE_PATH = APPLICATION_PATH + '/Img/'
+APPLICATION_IMAGE_PATH = APPLICATION_PATH + '/Resource/Img/'
+# 开发用Develop，生成时用Generate
+APPLICATION_MODE_SELECTION = {"DEVELOP","GENERATE"}
+APPLICATION_MODE = "DEVELOP"
+sys.path.append(APPLICATION_PATH+"/")
+sys.path.append(APPLICATION_PATH+"/logic")
+sys.path.append(APPLICATION_PATH+"/DataFiles")
 
 
 # -----------------------------------------------------------------------------
@@ -32,9 +40,7 @@ LOGGING_CONSOLE_FLAG = True
 LOGGING_FILE_LOG = True
 
 # Level of output
-LOGGING_LEVEL = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
-LOGGING_CURRENT_LEVEL = LOGGING_LEVEL[0]
-
+LOGGING_CURRENT_LEVEL = variable.logging_level.DEBUG
 
 # -----------------------------------------------------------------------------
 # Settings for CDU
@@ -46,77 +52,77 @@ CDU_POSITION_Y = 200
 CDU_WINDOW_WIDTH = 581
 CDU_WINDOW_HEIGHT = 900
 CDU_KEY_LIST = {
-    "L1": [9, 116, 40, 28, "L1"],
-    "L2": [9, 156, 40, 28, "L2"],
-    "L3": [9, 196, 40, 28, "L3"],
-    "L4": [9, 236, 40, 28, "L4"],
-    "L5": [9, 276, 40, 28, "L5"],
-    "L6": [9, 316, 40, 28, "L6"],
-    "R1": [534, 116, 40, 28, "R1"],
-    "R2": [534, 156, 40, 28, "R2"],
-    "R3": [534, 196, 40, 28, "R3"],
-    "R4": [534, 236, 40, 28, "R4"],
-    "R5": [534, 276, 40, 28, "R5"],
-    "R6": [534, 316, 40, 28, "R6"],
-    "INIT": [71, 436, 57, 38, "INIT"],
-    "RTE": [143, 436, 57, 38, "RTE"],
-    "CLB": [214, 436, 57, 38, "CLB"],
-    "CRZ": [286, 436, 57, 38, "CRZ"],
-    "DES": [358, 436, 57, 38, "DES"],
-    "MENU": [71, 489, 57, 38, "MENU"],
-    "LEGS": [143, 489, 57, 38, "LEGS"],
-    "DEP": [214, 489, 57, 38, "DEP"],
-    "HOLD": [286, 489, 57, 38, "HOLD"],
-    "PROG": [358, 489, 57, 38, "PROG"],
-    "N1": [71, 540, 57, 38, "N1"],
-    "FIX": [143, 540, 57, 38, "FIX"],
-    "PREV": [71, 593, 57, 38, "PREV"],
-    "NEXT": [143, 593, 57, 38, "NEXT"],
-    "EXEC": [450, 500, 57, 26, "EXEC"],
-    "BRT-": [450, 436, 24, 38, "BRT-"],
-    "BRT+": [485, 436, 24, 38, "BRT+"],
-    "1": [67, 657, 33, 30, "1"],
-    "2": [122, 657, 33, 30, "2"],
-    "3": [179, 657, 33, 30, "3"],
-    "4": [67, 713, 33, 30, "4"],
-    "5": [122, 713, 33, 30, "5"],
-    "6": [179, 713, 33, 30, "6"],
-    "7": [67, 771, 33, 30, "7"],
-    "8": [122, 771, 33, 30, "8"],
-    "9": [179, 771, 33, 30, "9"],
-    "dot": [67, 830, 33, 30, "dot"],
-    "0": [122, 830, 33, 30, "0"],
-    "plus": [179, 830, 33, 30, "plus"],
-    "A": [241, 548, 37, 37, "A"],
-    "B": [298, 548, 37, 37, "B"],
-    "C": [356, 548, 37, 37, "C"],
-    "D": [414, 548, 37, 37, "D"],
-    "E": [472, 548, 37, 37, "E"],
-    "F": [241, 603, 37, 37, "F"],
-    "G": [298, 603, 37, 37, "G"],
-    "H": [356, 603, 37, 37, "H"],
-    "I": [414, 603, 37, 37, "I"],
-    "J": [472, 603, 37, 37, "J"],
-    "K": [241, 658, 37, 37, "K"],
-    "L": [298, 658, 37, 37, "L"],
-    "M": [356, 658, 37, 37, "M"],
-    "N": [414, 658, 37, 37, "N"],
-    "O": [472, 658, 37, 37, "O"],
-    "P": [241, 714, 37, 37, "P"],
-    "Q": [298, 714, 37, 37, "Q"],
-    "R": [356, 714, 37, 37, "R"],
-    "S": [414, 714, 37, 37, "S"],
-    "T": [472, 714, 37, 37, "T"],
-    "U": [241, 770, 37, 37, "U"],
-    "V": [298, 770, 37, 37, "V"],
-    "W": [356, 770, 37, 37, "W"],
-    "X": [414, 770, 37, 37, "X"],
-    "Y": [472, 770, 37, 37, "Y"],
-    "Z": [241, 827, 37, 37, "Z"],
-    "SP": [298, 827, 37, 37, "SP"],
-    "DEL": [356, 827, 37, 37, "DEL"],
-    "/": [414, 827, 37, 37, "/"],
-    "CLR": [472, 827, 37, 37, "CLR"]
+    variable.key_press_content.L1: [9, 116, 40, 28],
+    variable.key_press_content.L2: [9, 156, 40, 28],
+    variable.key_press_content.L3: [9, 196, 40, 28],
+    variable.key_press_content.L4: [9, 236, 40, 28],
+    variable.key_press_content.L5: [9, 276, 40, 28],
+    variable.key_press_content.L6: [9, 316, 40, 28],
+    variable.key_press_content.R1: [534, 116, 40, 28],
+    variable.key_press_content.R2: [534, 156, 40, 28],
+    variable.key_press_content.R3: [534, 196, 40, 28],
+    variable.key_press_content.R4: [534, 236, 40, 28],
+    variable.key_press_content.R5: [534, 276, 40, 28],
+    variable.key_press_content.R6: [534, 316, 40, 28],
+    variable.key_press_content.INIT_REF: [71, 436, 57, 38],
+    variable.key_press_content.RTE: [143, 436, 57, 38],
+    variable.key_press_content.CLB: [214, 436, 57, 38],
+    variable.key_press_content.CRZ: [286, 436, 57, 38],
+    variable.key_press_content.DES: [358, 436, 57, 38],
+    variable.key_press_content.MENU: [71, 489, 57, 38],
+    variable.key_press_content.LEGS: [143, 489, 57, 38],
+    variable.key_press_content.DEPARR: [214, 489, 57, 38],
+    variable.key_press_content.HOLD: [286, 489, 57, 38],
+    variable.key_press_content.PROG: [358, 489, 57, 38],
+    variable.key_press_content.N1_LIMIT: [71, 540, 57, 38],
+    variable.key_press_content.FIX: [143, 540, 57, 38],
+    variable.key_press_content.PREV_PAGE: [71, 593, 57, 38],
+    variable.key_press_content.NEXT_PAGE: [143, 593, 57, 38],
+    variable.key_press_content.EXECUTE: [450, 500, 57, 26],
+    variable.key_press_content.BRTD: [450, 436, 24, 38],
+    variable.key_press_content.BRTU: [485, 436, 24, 38],
+    variable.key_press_content.ONE: [67, 657, 33, 30],
+    variable.key_press_content.TWO: [122, 657, 33, 30],
+    variable.key_press_content.THREE: [179, 657, 33, 30],
+    variable.key_press_content.FOUR: [67, 713, 33, 30],
+    variable.key_press_content.FIVE: [122, 713, 33, 30],
+    variable.key_press_content.SIX: [179, 713, 33, 30],
+    variable.key_press_content.SEVEN: [67, 771, 33, 30],
+    variable.key_press_content.EIGHT: [122, 771, 33, 30],
+    variable.key_press_content.NINE: [179, 771, 33, 30],
+    variable.key_press_content.DOT: [67, 830, 33, 30],
+    variable.key_press_content.ZERO: [122, 830, 33, 30],
+    variable.key_press_content.PLUS_SUBSTRACT: [179, 830, 33, 30],
+    variable.key_press_content.A: [241, 548, 37, 37],
+    variable.key_press_content.B: [298, 548, 37, 37],
+    variable.key_press_content.C: [356, 548, 37, 37],
+    variable.key_press_content.D: [414, 548, 37, 37],
+    variable.key_press_content.E: [472, 548, 37, 37],
+    variable.key_press_content.F: [241, 603, 37, 37],
+    variable.key_press_content.G: [298, 603, 37, 37],
+    variable.key_press_content.H: [356, 603, 37, 37],
+    variable.key_press_content.I: [414, 603, 37, 37],
+    variable.key_press_content.J: [472, 603, 37, 37],
+    variable.key_press_content.K: [241, 658, 37, 37],
+    variable.key_press_content.L: [298, 658, 37, 37],
+    variable.key_press_content.M: [356, 658, 37, 37],
+    variable.key_press_content.N: [414, 658, 37, 37],
+    variable.key_press_content.O: [472, 658, 37, 37],
+    variable.key_press_content.P: [241, 714, 37, 37],
+    variable.key_press_content.Q: [298, 714, 37, 37],
+    variable.key_press_content.R: [356, 714, 37, 37],
+    variable.key_press_content.S: [414, 714, 37, 37],
+    variable.key_press_content.T: [472, 714, 37, 37],
+    variable.key_press_content.U: [241, 770, 37, 37],
+    variable.key_press_content.V: [298, 770, 37, 37],
+    variable.key_press_content.W: [356, 770, 37, 37],
+    variable.key_press_content.X: [414, 770, 37, 37],
+    variable.key_press_content.Y: [472, 770, 37, 37],
+    variable.key_press_content.Z: [241, 827, 37, 37],
+    variable.key_press_content.SPACE: [298, 827, 37, 37],
+    variable.key_press_content.DELETE: [356, 827, 37, 37],
+    variable.key_press_content.SLASH: [414, 827, 37, 37],
+    variable.key_press_content.CLEAR: [472, 827, 37, 37]
 }
 
 # -----------------------------------------------------------------------------
@@ -182,63 +188,65 @@ POS_CDU_CONTENT_LINE = {
     ],
 }
 
-# -----------------------------------------------------------------------------
-# Pages for CDU
-# -----------------------------------------------------------------------------
-class pageIndex:
-    INDEX = 1
-    IDENT = 2
-    POS = 3
-    PERF = 4
-    TAKEOFF = 5
-    APPROACH = 6
-    OFFSET = 7
-    ROUTE = 8
-    N1 = 9
-    PROGRESS = 10
-    CLB = 11
-    CRZ = 12
-    DES = 13
-    LEGS = 14
-    DEPARR = 15
-    HOLD = 16
-    FIX = 17
-    pass
 
 # -----------------------------------------------------------------------------
 # Variables for CDU
 # -----------------------------------------------------------------------------
 class variable:
 
-    IDENT_MODEL = 2000,
-    IDENT_ENG_RATING = 2001,
-    IDENT_NAV_DATA_RELEASE = 2002,
-    IDENT_NAV_ACTIVE = 2003,
+    CDU_WINDOW_TITLE = "CDU_WINDOW_TITLE"
+    CDU_WINDOW_WIDTH = "CDU_WINDOW_WIDTH"
+    CDU_WINDOW_HEIGHT = "CDU_WINDOW_HEIGHT"
+    CDU_WINDOW_X = "CDU_WINDOW_X"
+    CDU_WINDOW_Y = "CDU_WINDOW_Y"
+    CDU_CURRENT_PAGE = "CDU_CURRENT_PAGE"
+    CDU_CURRENT_PAGE_INDEX = "CDU_CURRENT_PAGE_INDEX"
 
-    PERF_COST_INDEX = 4000,
-    PERF_COST_INDEX_LOWER_LIMIT = 0,
-    PERF_COST_INDEX_UPPER_LIMIT = 500,
-    PERF_GROSS_WEIGHT = 4001,
-    PERF_GROSS_WEIGHT_UPPER_LIMIT = 999.9,
-    PERF_CRUISE_CENTER_OF_GRAVITY = 4002,
-    PERF_CRUISE_CENTER_OF_GRAVITY_LOWER_LIMIT = 6.0,
-    PERF_CRUISE_CENTER_OF_GRAVITY_UPPER_LIMIT = 33.0,
-    PERF_FUEL = 4003,
-    PERF_ZERO_FUEL_WEIGHT = 4004,
+
+
+    IDENT_MODEL = "IDENT_MODEL"
+    IDENT_ENG_RATING = "IDENT_ENG_RATING"
+    IDENT_NAV_DATA_RELEASE = "IDENT_NAV_DATA_RELEASE"
+    IDENT_NAV_ACTIVE = "IDENT_NAV_ACTIVE"
+
+    PERF_COST_INDEX = "PERF_COST_INDEX"
+    PERF_GROSS_WEIGHT = "PERF_GROSS_WEIGHT"
+    PERF_CRUISE_CENTER_OF_GRAVITY = "PERF_CRUISE_CENTER_OF_GRAVITY"
+    PERF_FUEL = "PERF_FUEL"
+    PERF_ZERO_FUEL_WEIGHT = "PERF_ZERO_FUEL_WEIGHT"
+
+    RTE_ORIGIN = "RTE_ORIGIN"
+    RTE_ORIGIN_LOCATION = "RTE_ORIGIN_LOCATION"
+    RTE_DEST = "RTE_DEST"
+    RTE_DEST_LOCATION = "RTE_DEST_LOCATION"
+    RTE_RUNWAY = "RTE_RUNWAY"
+
+    DEPARR_DEP_AIRPORTS_DATA = "DEPARR_DEP_AIRPORTS_DATA"        # 离场机场的全部导航数据
+    DEPARR_DEP_PAGE_FLAG = "DEPARR_DEP_PAGE_FLAG"                # 在DEPARR页面是否可以进入DEPARTURE的标志
+
+    DEPARTURES_SID = "DEPARTURES_SID"              # 在DEPARTURE页面选定的SID的长期储存结果，用于标明ACT
+    DEPARTURES_SID_TEMP = "DEPARTURES_SID_TEMP"         # 在DEPARTURE页面用户临时选定SID的结果，用于更改显示
+    DEPARTURES_TRANSITION = "DEPARTURES_TRANSITION"       # 在DEPARTURE页面选定的Transition的长期储存结果，用于标明ACT
+    DEPARTURES_TRANSITION_TEMP = "DEPARTURES_TRANSITION_TEMP"  # 在DEPARTURE页面用户临时选定Transition的结果，用于更改显示
+    DEPARTURES_RUNWAY = "DEPARTURES_RUNWAY"           # 在DEPARTURE页面选定的SID的长期储存结果，用于标明ACT
+    DEPARTURES_RUNWAY_TEMP = "DEPARTURES_RUNWAY_TEMP"      # 在DEPARTURE页面用户临时选定Runway的结果，用于更改显示
+    DEPARTURES_KEY_PRESSED = "DEPARTURES_KEY_PRESSED"          # 在DEPARTURES页面按下按键的标志
+
+    POS_REF_AIRPORT = "POS_REF_AIRPORT" # POS INIT页面REF AIRPORT数据
+    POS_REF_GATE = "POS_REF_GATE"       # POS INIT页面REF GATE
 
     pass
 
 # -----------------------------------------------------------------------------
 # Messages for CDU
 # -----------------------------------------------------------------------------
-class variable_type:
-    INTEGER = 0,
-    FLOAT = 1,
-    STRING = 2,
-    pass
+
 # -----------------------------------------------------------------------------
 # Messages for CDU
 # -----------------------------------------------------------------------------
 class message:
-    INVALID_ENTRY = "INVALID_ENTRY",
+    INVALID_ENTRY = "INVALID_ENTRY"
+    INVALID_DELETE = "INVALID_DELETE"
+    RUNWAY_NA_FOR_SID = "RUNWAY N/A FOR SID"
+    NOT_IN_DATA_BASE = "NOT IN DATA BASE"
     pass
