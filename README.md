@@ -12,5 +12,5 @@
 * 该工程仅完成了一小部分，仍有大量得功能未进行实现，仍有大量bug存在在代码当中。欢迎有志之士在此基础上进行改进，提升。
 
 # 作者微信公众号
-作者同时建立了[FYCYC淘宝店](https://shop119523470.taobao.com/?spm=a230r.7195193.1997079397.2.4bf95e2fbgx4uG)、[FYCYC官方网站][https://www.fycyccreativehouse.com/]并开通了FYCYC微信公众号，欢迎大家有需要进行购买、关注。
-![](https://mp.weixin.qq.com/misc/getqrcode?fakeid=3092227195&token=914354797&action=download&style=1&pixsize=224)
+作者同时建立了[FYCYC淘宝店](https://shop119523470.taobao.com/?spm=a230r.7195193.1997079397.2.4bf95e2fbgx4uG), [FYCYC官方网站](https://www.fycyccreativehouse.com/)并开通了FYCYC微信公众号，欢迎大家有需要进行购买、关注。
+![](https://github.com/Kuailun/737NG_CDU/blob/master/Version_1/Resource/Img/FYCYC.jpg)
