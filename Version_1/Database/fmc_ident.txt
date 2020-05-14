@@ -1,0 +1,4 @@
+[Ident]
+NavData=AIRAC-2002
+OpProgram=JAN30FEB27/20
+CoData=JEP-2002
