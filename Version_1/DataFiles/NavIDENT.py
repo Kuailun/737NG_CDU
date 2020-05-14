@@ -33,7 +33,7 @@ class NavIDENT(database):
         if not status:
             msg = "{0} {1}.{2} not found. Error!".format(p_path, p_name, p_type)
             logger.critical(msg)
-            raise(msg)
+            raise Exception(msg)
 
         _,_,self._database = self._Database_ReadFile()
         pass
