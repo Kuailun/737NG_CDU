@@ -6,7 +6,7 @@
 
 from dataFile import DataFile
 
-TEST_TARGET = "Class"
+TEST_TARGET = "NavRTE"
 
 if TEST_TARGET == "":
     print("开始测试，请选择测试内容")

@@ -1457,8 +1457,12 @@ def pageDraw(self, painter):
         # self.lineDisplay["L3M"] = [{"Color": ss.COLOR_WHITE, "Content": "<TO-1>"}]
         self.lineDisplay["L3M"] = [{"Color": ss.COLOR_MAGENTA, "Content": "         FYCYC"}]
         # self.lineDisplay["L5M"] = [{"Color": ss.COLOR_WHITE, "Content": "<MAX RATE"}]
-        self.lineDisplay["L6M"] = [{"Color": ss.COLOR_WHITE, "Content": "FYCYC-CREATIVEHOUSE"}]
-        self.lineDisplay["L7M"] = [{"Color": ss.COLOR_WHITE, "Content": self.inputLine[0]}]
+        self.lineDisplay["L6M"] = [{"Color": ss.COLOR_WHITE, "Content": "WHITE"},
+                                   {"Color": ss.COLOR_CYAN, "Font":ss.FONT_CDU_TITLE_SMALL, "Content": "CYAN"},
+                                   {"Color": ss.COLOR_GREEN, "Font":ss.FONT_CDU_TITLE_SMALL, "Content": "GREEN"},
+                                   {"Color": ss.COLOR_WEAK_WHITE,"Content": "LIGHTWHITE"},
+                                   ]
+        # self.lineDisplay["L7M"] = [{"Color": ss.COLOR_WHITE, "Content": self.inputLine[0]}]
 
         # self.lineDisplay["R1M"] = [{"Color": ss.COLOR_WHITE, "Content": "100.9/100.9"}]
         # self.lineDisplay["R2M"] = [{"Color": ss.COLOR_WHITE, "Content": "<SEL>   CLB>"}]
@@ -1468,11 +1472,11 @@ def pageDraw(self, painter):
         # self.lineDisplay["R6M"] = [{"Color": ss.COLOR_WHITE, "Content": "ROUTE>"}]
 
         # self.lineDisplay["L1S"] = [{"Color": ss.COLOR_WHITE, "Content": " AUTHOR"}]
-        self.lineDisplay["L2S"] = [{"Color": ss.COLOR_WHITE, "Font":ss.FONT_CDU_TITLE_NORMAL,"Content": "       DEVELOPER"}]
+        # self.lineDisplay["L2S"] = [{"Color": ss.COLOR_WHITE, "Font":ss.FONT_CDU_TITLE_NORMAL,"Content": "       DEVELOPER"}]
         # self.lineDisplay["L3S"] = [{"Color": ss.COLOR_WHITE, "Content": " 26K DERATE"}]
         # self.lineDisplay["L4S"] = [{"Color": ss.COLOR_WHITE, "Content": " 24K DERATE"}]
         # self.lineDisplay["L5S"] = [{"Color": ss.COLOR_WHITE, "Content": " CONTACT US"}]
-        self.lineDisplay["L6S"] = [{"Color": ss.COLOR_WHITE, "Content": "CONTACT: WECHAT PLATFORM"}]
+        # self.lineDisplay["L6S"] = [{"Color": ss.COLOR_WHITE, "Content": "CONTACT: WECHAT PLATFORM"}]
 
         # self.lineDisplay["R1S"] = [{"Color": ss.COLOR_WHITE, "Content": "RUNWAYS"}]
         # self.lineDisplay["R2S"] = [{"Color": ss.COLOR_WHITE, "Content": "DTG   ALT"}]

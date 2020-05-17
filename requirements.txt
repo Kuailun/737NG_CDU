@@ -1,0 +1,2 @@
+PyQt5==5.14.2
+coloredlogs==14.0
